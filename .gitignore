@@ -1,3 +1,5 @@
 # dependencies
 /backend/node_modules
+
+# virtual environment
 /backend/.env
