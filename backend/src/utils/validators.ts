@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { body, ValidationChain, validationResult } from "express-validator";
 
-
 export const validate = (validations: ValidationChain[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         for (let validation of validations) {

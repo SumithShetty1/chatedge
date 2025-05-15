@@ -1,5 +1,8 @@
 # dependencies
-/backend/node_modules
+node_modules/
 
 # virtual environment
-/backend/.env
+.env
+
+# Build folder
+dist/
