@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../models/User.js";
-import Groq from "groq-sdk";
 import { configureGroq } from "../config/groq-config.js";
 
 type GroqMessage = {
