@@ -12,16 +12,17 @@ const Signup = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
     try {
-      toast.loading("Signing In!", { id: "login" });
-      await auth?.login(email, password);
-      toast.success("Signed In Successfully", { id: "login" });
+      toast.loading("Signing up!", { id: "signup" });
+      await auth?.signup(name,email, password);
+      toast.success("Signed up Successfully", { id: "signup" });
     } catch (error) {
       console.log(error);
-      toast.error("Signing In Failed", { id: "login" });
+      toast.error("Signing up Failed", { id: "signup" });
     }
   };
 
@@ -69,9 +70,9 @@ const Signup = () => {
               padding={2}
               fontWeight={600}
             >
-              Login
+              Signup
             </Typography>
-
+             <CustomizedInput type="text" name="name" label="Name" />
             <CustomizedInput type="email" name="email" label="Email" />
             <CustomizedInput type="password" name="password" label="Password" />
 
@@ -92,7 +93,7 @@ const Signup = () => {
               }}
               endIcon={<IoIosLogIn />}
             >
-              Login
+              Signup
             </Button>
           </Box>
         </form>
