@@ -86,7 +86,7 @@ const Chat = () => {
             display: "flex",
             width: "100%",
             height: "60vh",
-            bgcolor: "rbg(17, 29, 39)",
+            bgcolor: "rgb(17,29,39)",
             borderRadius: 5,
             flexDirection: "column",
             mx: 3,
@@ -141,7 +141,7 @@ const Chat = () => {
           fontWeight: "600",
         }}
         >
-          Model - GPT 3.5 Turbo
+          Model - Llama 3
         </Typography>
 
         <Box
@@ -165,8 +165,7 @@ const Chat = () => {
         </Box>
 
         <div style={{
-          width: "95%",
-          padding: "20px",
+          width: "100%",
           borderRadius: 8,
           backgroundColor: "rgb(17,27,39)",
           display: "flex",
@@ -185,7 +184,7 @@ const Chat = () => {
             style={{
               width: "100%",
               backgroundColor: "transparent",
-              padding: '10px',
+              padding: '30px',
               border: "none",
               outline: "none",
               color: "white",
@@ -193,7 +192,7 @@ const Chat = () => {
             }}
           />
 
-          <IconButton onClick={handleSubmit} sx={{ m1: "auto", color: "white" }}>
+          <IconButton onClick={handleSubmit} sx={{ color: "white", mx: 1 }}>
             <IoMdSend />
           </IconButton>
         </div>

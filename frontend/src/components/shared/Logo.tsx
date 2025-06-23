@@ -17,9 +17,9 @@ const Logo = () => {
         gap: "8px",
         textDecoration: "none"
       }}>
-        <img src="openai.png" alt="Logo"
-          width={"30px"}
-          height={"30px"}
+        <img src="intellichat-logo.png" alt="Logo"
+          width={"40px"}
+          height={"35px"}
           className="image-inverted"
         />
         <Typography

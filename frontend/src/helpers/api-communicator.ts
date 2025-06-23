@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const loginUser = async(email: string, password: string) => {
-    const res = await axios.post("/user/login", {email, password});
+export const loginUser = async (email: string, password: string) => {
+    const res = await axios.post("/user/login", { email, password });
 
     if (res.status !== 200) {
         throw new Error("Unable to login");
@@ -9,9 +9,20 @@ export const loginUser = async(email: string, password: string) => {
 
     const data = await res.data;
     return data;
-}
+};
 
-export const checkAuthStatus = async() => {
+export const signupUser = async (name: string, email: string, password: string) => {
+    const res = await axios.post("/user/signup", { name, email, password });
+
+    if (res.status !== 201) {
+        throw new Error("Unable to Signup");
+    }
+
+    const data = await res.data;
+    return data;
+};
+
+export const checkAuthStatus = async () => {
     const res = await axios.get("/user/auth-status");
 
     if (res.status !== 200) {
@@ -22,7 +33,7 @@ export const checkAuthStatus = async() => {
     return data;
 }
 
-export const sendChatRequest = async(message: string) => {
+export const sendChatRequest = async (message: string) => {
     const res = await axios.post("/chat/new", { message });
 
     if (res.status !== 200) {
@@ -33,7 +44,7 @@ export const sendChatRequest = async(message: string) => {
     return data;
 }
 
-export const getUserChat = async() => {
+export const getUserChat = async () => {
     const res = await axios.get("/chat/all-chats");
 
     if (res.status !== 200) {
@@ -44,7 +55,7 @@ export const getUserChat = async() => {
     return data;
 }
 
-export const deleteUserChats = async() => {
+export const deleteUserChats = async () => {
     const res = await axios.delete("/chat/delete");
 
     if (res.status !== 200) {
@@ -55,7 +66,7 @@ export const deleteUserChats = async() => {
     return data;
 }
 
-export const logoutUser = async() => {
+export const logoutUser = async () => {
     const res = await axios.get("/user/logout");
 
     if (res.status !== 200) {

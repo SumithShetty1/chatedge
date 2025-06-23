@@ -9,11 +9,7 @@ body {
   font-family: "Roboto Slab", serif;
 }
 
-.image-inverted {
-  filter: invert(100%);
-}
-
-.nav-link{
+.nav-link {
   font-weight: 600;
   text-transform: uppercase;
   margin-right: 10px;
