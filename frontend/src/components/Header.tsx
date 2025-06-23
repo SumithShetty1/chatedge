@@ -7,6 +7,7 @@ import NavigationLink from './shared/NavigationLink';
 
 const Header = () => {
   const auth = useAuth();
+  
   return (
     <AppBar
       sx={{ bgcolor: "transparent", position: "static", boxShadow: "none" }}
@@ -39,7 +40,7 @@ const Header = () => {
                 textColor="black"
               />
               <NavigationLink
-                bg="51538f"
+                bg="#51538f"
                 textColor="white"
                 to="/signup"
                 text="Signup"
