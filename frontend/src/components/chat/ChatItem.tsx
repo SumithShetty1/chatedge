@@ -30,9 +30,9 @@ const ChatItem = ({
     const messageBlocks = extractCodeFromString(content);
     const auth = useAuth();
     return role === "assistant" ? (
-        <Box sx={{ display: "flex", p: 2, bgcolor: "#004d5612", my: 2, gap: 2 ,borderRadius:2,}}>
-            <Avatar sx={{ ml: "0" }}>
-                <img src="openai.png" alt="openai" width={"30px"} />
+        <Box sx={{ display: "flex", p: 2, bgcolor: "#004d5612", my: 1, gap: 2 ,borderRadius:2,}}>
+            <Avatar sx={{ ml: "0", bgcolor: "white" }}>
+                <img src="intellichat-logo.png" alt="Logo" width={"30px"} />
             </Avatar>
             <Box>
                 {!messageBlocks && (
