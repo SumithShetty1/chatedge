@@ -18,8 +18,16 @@ type Message = {
 const Chat = () => {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const auth = useAuth();
   const [chatMessages, setChatMessages] = useState<Message[]>([])
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
 
   // Handles sending new chat messages
   const handleSubmit = async () => {
@@ -88,6 +96,7 @@ const Chat = () => {
         flexDirection: "column",
       }}>
         <Box
+          ref={chatContainerRef}
           sx={{
             display: "flex",
             width: "100%",
@@ -151,6 +160,7 @@ const Chat = () => {
         </Typography>
 
         <Box
+          ref={chatContainerRef}
           sx={{
             width: "100%",
             height: "60vh",
