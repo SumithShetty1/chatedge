@@ -9,7 +9,7 @@ import { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 
 // Configure axios defaults for all HTTP requests
-axios.defaults.baseURL = "http://localhost:5000/api/v1";
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1';
 axios.defaults.withCredentials = true;
 
 // Create a custom Material-UI theme

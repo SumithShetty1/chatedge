@@ -22,8 +22,10 @@ app.use(express.json());
 // Parse cookies with secret from environment variables
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-// HTTP request logger (dev format) - remove in production
-// app.use(morgan("dev"));
+// HTTP request logging - only in development
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 // ============= Route Configuration ============= //
 
