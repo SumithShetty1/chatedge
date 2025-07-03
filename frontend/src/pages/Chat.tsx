@@ -8,17 +8,20 @@ import { deleteUserChats, getUserChat, sendChatRequest } from "../helpers/api-co
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
+// Type definition for chat messages
 type Message = {
   role: "user" | "assistant";
   content: string
 };
 
+// Main chat interface component with message history and input
 const Chat = () => {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement | null>(null)
   const auth = useAuth();
   const [chatMessages, setChatMessages] = useState<Message[]>([])
 
+  // Handles sending new chat messages
   const handleSubmit = async () => {
     const content = inputRef.current?.value as string;
 
@@ -33,6 +36,7 @@ const Chat = () => {
     setChatMessages([...chatData.chats]);
   };
 
+  // Clears all chat history
   const handleDeleteChats = async () => {
     try {
       toast.loading("Deleting Chats", { id: "deletechats" });
@@ -46,6 +50,7 @@ const Chat = () => {
     }
   }
 
+  // Loads chat history on component mount
   useLayoutEffect(() => {
     if (auth?.isLoggedIn && auth?.user) {
       toast.loading("Loading Chats", { id: "loadchats" });
@@ -59,6 +64,7 @@ const Chat = () => {
     }
   }, [auth]);
 
+  // Redirects unauthenticated users to login
   useEffect(() => {
     if (!auth?.user) {
       navigate("/login");
@@ -158,10 +164,13 @@ const Chat = () => {
             scrollBehavior: "smooth",
           }}
         >
+
+          {/* Render all chat messages */}
           {chatMessages.map((chat, index) => (
             //@ts-ignore
             <ChatItem content={chat.content} role={chat.role} key={index} />
           ))}
+
         </Box>
 
         <div style={{

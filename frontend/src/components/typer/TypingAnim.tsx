@@ -1,5 +1,6 @@
 import { TypeAnimation } from "react-type-animation";
 
+// Typing animation component with multiple text sequences
 const TypingAnim = () => {
   return (
     <TypeAnimation
@@ -19,4 +20,5 @@ const TypingAnim = () => {
     />
   )
 }
+
 export default TypingAnim

@@ -5,17 +5,21 @@ import Logo from "./shared/Logo";
 import { useAuth } from '../context/AuthContext';
 import NavigationLink from './shared/NavigationLink';
 
+// Header component with dynamic navigation based on auth status
 const Header = () => {
   const auth = useAuth();
-  
+
   return (
     <AppBar
       sx={{ bgcolor: "transparent", position: "static", boxShadow: "none" }}
     >
       <Toolbar sx={{ display: "flex" }}>
+        {/* Application logo */}
         <Logo />
         <div>
+          {/* Conditional rendering based on login status */}
           {auth?.isLoggedIn ? (
+            // Logged-in user navigation
             <>
               <NavigationLink
                 bg="#00fffc"
@@ -32,6 +36,7 @@ const Header = () => {
               />
             </>
           ) : (
+            // Guest user navigation
             <>
               <NavigationLink
                 bg="#00fffc"

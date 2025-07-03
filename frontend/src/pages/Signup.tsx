@@ -6,10 +6,12 @@ import { toast } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
+// Signup page component with user registration form
 const Signup = () => {
   const navigate = useNavigate();
   const auth = useAuth();
 
+  // Handles form submission for user registration
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -27,6 +29,7 @@ const Signup = () => {
     }
   };
 
+  // Redirects authenticated users to chat page
   useEffect(() => {
     if (auth?.user) {
       navigate("/chat");
@@ -73,8 +76,14 @@ const Signup = () => {
             >
               Signup
             </Typography>
+
+            {/* Name input field */}
             <CustomizedInput type="text" name="name" label="Name" />
+
+            {/* Email input field */}
             <CustomizedInput type="email" name="email" label="Email" />
+
+            {/* Password input field */}
             <CustomizedInput type="password" name="password" label="Password" />
 
             <Button

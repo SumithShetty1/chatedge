@@ -6,9 +6,12 @@ import { toast } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
+// Login page component with form validation and authentication
 const Login = () => {
   const navigate = useNavigate();
   const auth = useAuth();
+
+  // Handles form submission for user login
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -25,8 +28,9 @@ const Login = () => {
     }
   };
 
+  // Redirects to chat page if user is already authenticated
   useEffect(() => {
-    if(auth?.user) {
+    if (auth?.user) {
       navigate("/chat");
     }
   }, [auth]);
@@ -72,7 +76,10 @@ const Login = () => {
               Login
             </Typography>
 
+            {/* Email input field */}
             <CustomizedInput type="email" name="email" label="Email" />
+
+            {/* Password input field */}
             <CustomizedInput type="password" name="password" label="Password" />
 
             <Button

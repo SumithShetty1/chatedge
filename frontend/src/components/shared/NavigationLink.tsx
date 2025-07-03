@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+// Type definition for navigation link props
 type Props = {
     to: string;
     bg: string;
@@ -8,6 +9,7 @@ type Props = {
     onClick?: () => Promise<void>;
 };
 
+// Reusable navigation link component with customizable styling
 const NavigationLink = (props: Props) => {
     return (
         <Link

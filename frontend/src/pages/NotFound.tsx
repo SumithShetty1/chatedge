@@ -2,6 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import Footer from "../components/footer/Footer";
 
+// 404 Not Found page component with error message and navigation
 const NotFound = () => {
     return (
         <Box
@@ -71,6 +72,8 @@ const NotFound = () => {
                     Return to Home
                 </Button>
             </Box>
+
+            {/* Footer component */}
             <Footer />
         </Box>
     );

@@ -5,18 +5,29 @@ import appRouter from "./routes/index.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
+// Load environment variables from .env file
 config();
 
+// Create Express application instance
 const app = express();
 
-// Middlewares
-app.use(cors({origin: "http://localhost:5173", credentials: true}))
+// ============= Middleware Configuration ============= //
+
+// Enable CORS with specific origin and credentials
+app.use(cors({origin: process.env.CORS_ORIGIN, credentials: true}))
+
+// Parse JSON bodies in requests
 app.use(express.json());
+
+// Parse cookies with secret from environment variables
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-// Remove it in production
-app.use(morgan("dev"));
+// HTTP request logger (dev format) - remove in production
+// app.use(morgan("dev"));
 
+// ============= Route Configuration ============= //
+
+// Mount main router with API version prefix
 app.use("/api/v1", appRouter)
 
 

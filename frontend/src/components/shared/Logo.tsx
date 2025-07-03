@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import Typography from "@mui/material/Typography";
 
+// Logo component with clickable link to homepage
 const Logo = () => {
   return (
     <div style={{
@@ -30,7 +31,7 @@ const Logo = () => {
             textShadow: "2px 2px 20px #000",
           }}
         >
-          <span style={{ fontSize: "20px" }}>IntelliChat</span>
+          <span style={{ fontSize: "25px" }}>IntelliChat</span>
         </Typography>
       </Link>
     </div>

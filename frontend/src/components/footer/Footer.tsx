@@ -1,6 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
 
+// Fixed footer component displaying copyright information
 const Footer = () => {
   return (
     <footer>

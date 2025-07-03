@@ -5,6 +5,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { coldarkCold } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ReactMarkdown from 'react-markdown';
 
+// Extracts code blocks from message using triple backticks
 function extractCodeFromString(message: string) {
     if (message.includes("```")) {
         const blocks = message.split("```");
@@ -12,6 +13,7 @@ function extractCodeFromString(message: string) {
     }
 }
 
+// Detects if a string contains code-like patterns
 function isCodeBlock(str: string) {
     if (str.includes("=") || str.includes(";") || str.includes("[") || str.includes("]") || str.includes("{") || str.includes("}") || str.includes("#") || str.includes("//")) {
         return true;
@@ -20,6 +22,7 @@ function isCodeBlock(str: string) {
     return false;
 }
 
+// Chat message component with code highlighting support
 const ChatItem = ({
     content,
     role,
@@ -30,16 +33,23 @@ const ChatItem = ({
     const messageBlocks = extractCodeFromString(content);
     const auth = useAuth();
     return role === "assistant" ? (
-        <Box sx={{ display: "flex", p: 2, bgcolor: "#004d5612", my: 1, gap: 2 ,borderRadius:2,}}>
+        // Assistant message styling (different background)
+        <Box sx={{ display: "flex", p: 2, bgcolor: "#004d5612", my: 1, gap: 2, borderRadius: 2, }}>
+            {/* Assistant avatar with logo */}
             <Avatar sx={{ ml: "0", bgcolor: "white" }}>
                 <img src="intellichat-logo.png" alt="Logo" width={"30px"} />
             </Avatar>
+
+            {/* Message content container */}
             <Box>
+                {/* Render simple message if no code blocks */}
                 {!messageBlocks && (
                     <Box sx={{ fontSize: "20px", color: "white" }}>
                         <ReactMarkdown>{content}</ReactMarkdown>
                     </Box>
                 )}
+
+                {/* Render parsed message with code highlighting */}
                 {messageBlocks && messageBlocks.length && messageBlocks.map((block) => isCodeBlock(block) ? (
                     <SyntaxHighlighter language="javascript" style={coldarkCold}>
                         {block}
@@ -53,17 +63,24 @@ const ChatItem = ({
             </Box>
         </Box>
     ) : (
-        <Box sx={{ display: "flex", p: 2, bgcolor: "#004d56", gap: 2, my: 2 ,borderRadius:2,}}>
+        // User message styling
+        <Box sx={{ display: "flex", p: 2, bgcolor: "#004d56", gap: 2, my: 2, borderRadius: 2, }}>
+            {/* User avatar with initials */}
             <Avatar sx={{ ml: "0", bgcolor: "black", color: "white" }}>
                 {auth?.user?.name[0]}
                 {auth?.user?.name.split(" ")[1] ? auth.user.name.split(" ")[1][0] : ""}
             </Avatar>
+
+            {/* Message content container */}
             <Box>
+                {/* Render simple message if no code blocks */}
                 {!messageBlocks && (
                     <Box sx={{ fontSize: "20px", color: "white" }}>
                         <ReactMarkdown>{content}</ReactMarkdown>
                     </Box>
                 )}
+
+                {/* Render parsed message with code highlighting */}
                 {messageBlocks && messageBlocks.length && messageBlocks.map((block) => isCodeBlock(block) ? (
                     <SyntaxHighlighter language="javascript" style={coldarkCold}>
                         {block}
