@@ -1,4 +1,4 @@
-import { createContext, ReactNode, use, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { checkAuthStatus, loginUser, logoutUser, signupUser } from "../helpers/api-communicator";
 
 // Type definition for User object

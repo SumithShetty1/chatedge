@@ -1,4 +1,3 @@
-import React from "react";
 import TextField from "@mui/material/TextField";
 
 // Props type definition for the customized input
