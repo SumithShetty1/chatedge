@@ -15,7 +15,7 @@ const TypingAnim = () => {
 
       ]}
       speed={50}
-      style={{ fontSize: '60px', color: "white", display: "inline-block", textShadow: "1px 1px 20px #000", }}
+      style={{ fontSize: 'clamp(30px, 5vw, 60px)', color: "white", display: "inline-block", textShadow: "1px 1px 20px #000", margin: "auto", textAlign: "center" }}
       repeat={Infinity}
     />
   )

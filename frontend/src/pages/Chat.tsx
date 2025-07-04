@@ -7,6 +7,7 @@ import { IoMdSend } from 'react-icons/io';
 import { deleteUserChats, getUserChat, sendChatRequest } from "../helpers/api-communicator";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { MdDelete } from "react-icons/md";
 
 // Type definition for chat messages
 type Message = {
@@ -146,6 +147,7 @@ const Chat = () => {
           </Button>
         </Box>
       </Box>
+
       <Box sx={{ display: "flex", flex: { md: 0.8, xs: 1, sm: 1 }, flexDirection: 'column', px: 3 }}>
         <Typography sx={{
           textAlign: "center",
@@ -213,6 +215,19 @@ const Chat = () => {
 
           <IconButton onClick={handleSubmit} sx={{ color: "white", mx: 1 }}>
             <IoMdSend />
+          </IconButton>
+          <IconButton onClick={handleDeleteChats}
+            sx={{
+              color: red[300],
+              mr: 1,
+              display: { md: 'none', xs: 'flex', sm: 'flex' },
+              ":hover": {
+                color: red.A400,
+              }
+            }}
+            title="Clear conversation"
+          >
+            <MdDelete />
           </IconButton>
         </div>
       </Box>

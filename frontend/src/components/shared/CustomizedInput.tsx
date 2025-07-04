@@ -21,7 +21,8 @@ const CustomizedInput = (props: Props) => {
         },
         input: {
           style: {
-            width: "400px",
+            width: "100%",
+            maxWidth: "400px",
             borderRadius: 10,
             fontSize: 20,
             color: "white",

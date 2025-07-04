@@ -38,17 +38,18 @@ const Login = () => {
   return (
     <Box width={"100%"} height={"100%"} display="flex" flex={1}>
       <Box padding={5} mt={5} display={{ md: "flex", sm: "none", xs: "none" }}>
-        <img src="airobot.png" alt="Robot" style={{ width: "400px" }} />
+        <img src="airobot.png" alt="Robot" style={{ width: "100%", maxWidth: "400px" }} />
       </Box>
 
       <Box
         display={"flex"}
-        flex={{ xs: 1, md: 0.5 }}
+        flex={{ xs: 1, md: 1 }}
         justifyContent={"center"}
         alignItems={"center"}
         padding={2}
-        ml={"auto"}
-        mt={16}
+        ml={{ xs: 0, md: "auto" }}
+        mr={{ xs: 0, md: "auto" }}
+        mt={{ xs: 2, sm: 16 }}
       >
         <form
           onSubmit={handleSubmit}
@@ -58,6 +59,8 @@ const Login = () => {
             boxShadow: "10px 10px 20px #000",
             borderRadius: "10px",
             border: "none",
+            width: "100%",
+            maxWidth: "400px"
           }}
         >
           <Box
@@ -88,7 +91,8 @@ const Login = () => {
                 px: 2,
                 py: 1,
                 mt: 2,
-                width: "400px",
+                width: "100%",
+                maxWidth: "400px",
                 borderRadius: 2,
                 bgcolor: "#00fffc",
                 color: "black",
