@@ -47,6 +47,8 @@ export const userSignup = async (
             path: "/",
             domain: process.env.COOKIE_DOMAIN,
             httpOnly: true,
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: process.env.NODE_ENV === 'production',
             signed: true,
         });
 
@@ -63,6 +65,8 @@ export const userSignup = async (
             domain: process.env.COOKIE_DOMAIN,
             expires,
             httpOnly: true,
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: process.env.NODE_ENV === 'production',
             signed: true,
         });
 
@@ -103,6 +107,8 @@ export const userLogin = async (
             path: "/",
             domain: process.env.COOKIE_DOMAIN,
             httpOnly: true,
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: process.env.NODE_ENV === 'production',
             signed: true,
         });
 
@@ -119,6 +125,8 @@ export const userLogin = async (
             domain: process.env.COOKIE_DOMAIN,
             expires,
             httpOnly: true,
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: process.env.NODE_ENV === 'production',
             signed: true,
         });
 
@@ -185,6 +193,8 @@ export const userLogout = async (
             path: "/",
             domain: process.env.COOKIE_DOMAIN,
             httpOnly: true,
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            secure: process.env.NODE_ENV === 'production',
             signed: true,
         });
 
