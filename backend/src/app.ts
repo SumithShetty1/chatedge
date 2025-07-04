@@ -14,7 +14,12 @@ const app = express();
 // ============= Middleware Configuration ============= //
 
 // Enable CORS with specific origin and credentials
-app.use(cors({origin: process.env.CORS_ORIGIN, credentials: true}))
+app.use(cors({
+  origin: process.env.CORS_ORIGIN,
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE']
+}))
 
 // Parse JSON bodies in requests
 app.use(express.json());
