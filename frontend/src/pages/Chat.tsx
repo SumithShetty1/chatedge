@@ -207,7 +207,7 @@ const Chat = () => {
               border: "none",
               outline: "none",
               color: "white",
-              fontSize: "20px",
+              fontSize: "18px",
             }}
           />
 

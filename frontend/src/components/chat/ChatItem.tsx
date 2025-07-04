@@ -43,7 +43,7 @@ const ChatItem = ({
             <Box>
                 {/* Render simple message if no code blocks */}
                 {!messageBlocks && (
-                    <Box sx={{ fontSize: "18px", color: "white" }}>
+                    <Box sx={{ fontSize: "18px", color: "white", fontFamily:"work sans" }}>
                         <ReactMarkdown>{content}</ReactMarkdown>
                     </Box>
                 )}
@@ -54,7 +54,7 @@ const ChatItem = ({
                         {block}
                     </SyntaxHighlighter>
                 ) : (
-                    <Box sx={{ fontSize: "18px", color: "white" }}>
+                    <Box sx={{ fontSize: "18px", color: "white", fontFamily:"work sans" }}>
                         <ReactMarkdown>{block}</ReactMarkdown>
                     </Box>
                 )
@@ -74,7 +74,7 @@ const ChatItem = ({
             <Box>
                 {/* Render simple message if no code blocks */}
                 {!messageBlocks && (
-                    <Box sx={{ fontSize: "18px", color: "white" }}>
+                    <Box sx={{ fontSize: "18px", color: "white", fontFamily:"work sans" }}>
                         <ReactMarkdown>{content}</ReactMarkdown>
                     </Box>
                 )}
@@ -85,7 +85,7 @@ const ChatItem = ({
                         {block}
                     </SyntaxHighlighter>
                 ) : (
-                    <Box sx={{ fontSize: "18px", color: "white" }}>
+                    <Box sx={{ fontSize: "18px", color: "white", fontFamily:"work sans" }}>
                         <ReactMarkdown>{block}</ReactMarkdown>
                     </Box>
                 )
