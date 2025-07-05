@@ -17,7 +17,7 @@ const Logo = () => {
         gap: "8px",
         textDecoration: "none"
       }}>
-        <img src="intellichat-logo.png" alt="Logo"
+        <img src="chatedge-logo.png" alt="Logo"
           width={"40px"}
           height={"35px"}
           className="image-inverted"
@@ -30,7 +30,7 @@ const Logo = () => {
             textShadow: "2px 2px 20px #000",
           }}
         >
-          <span style={{ fontSize: "25px" }}>IntelliChat</span>
+          <span style={{ fontSize: "25px" }}>ChatEdge</span>
         </Typography>
       </Link>
     </div>

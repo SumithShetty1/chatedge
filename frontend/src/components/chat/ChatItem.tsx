@@ -36,7 +36,7 @@ const ChatItem = ({
         <Box sx={{ display: "flex", p: 2, bgcolor: "#004d5612", my: 1, gap: 2, borderRadius: 2, }}>
             {/* Assistant avatar with logo */}
             <Avatar sx={{ ml: "0", bgcolor: "white" }}>
-                <img src="intellichat-logo.png" alt="Logo" width={"30px"} />
+                <img src="chatedge-logo.png" alt="Logo" width={"30px"} />
             </Avatar>
 
             {/* Message content container */}

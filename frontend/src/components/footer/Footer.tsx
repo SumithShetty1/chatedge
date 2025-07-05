@@ -27,7 +27,7 @@ const Footer = () => {
             letterSpacing: "0.5px"
           }}
         >
-          © {new Date().getFullYear()} IntelliChat. All rights reserved.
+          © {new Date().getFullYear()} ChatEdge. All rights reserved.
         </Typography>
       </Box>
     </footer>

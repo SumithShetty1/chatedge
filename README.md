@@ -1,7 +1,7 @@
-# IntelliChat - AI Chatbot Web Application
+# ChatEdge - AI Chatbot Web Application
 
 ## Project Overview
-IntelliChat is a full-stack AI chatbot application built with the MERN stack and TypeScript. It enables users to interact with an intelligent assistant powered by Llama 3 model via Groq. The app features secure JWT authentication, chat history, and a responsive interface designed for dynamic, natural language conversations.
+ChatEdge is a full-stack AI chatbot application built with the MERN stack and TypeScript. It enables users to interact with an intelligent assistant powered by Llama 3 model via Groq. The app features secure JWT authentication, chat history, and a responsive interface designed for dynamic, natural language conversations.
 
 ## Key Features
 - **AI-Powered Chat**: Conversational interface with Llama 3 model
@@ -27,13 +27,13 @@ IntelliChat is a full-stack AI chatbot application built with the MERN stack and
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/SumithShetty1/intellichat.git
+git clone https://github.com/SumithShetty1/chatedge.git
 ```
 
 ### 2. Open Project in VS Code
 1. Launch VS Code
 2. Select `File` → `Open Folder`
-3. Navigate to and select the cloned `intellichat` folder
+3. Navigate to and select the cloned `chatedge` folder
 
 ### 3. Frontend Setup
 1. **Open Terminal**:
