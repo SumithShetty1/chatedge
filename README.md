@@ -94,3 +94,7 @@ NODE_ENV=development
 ## Access the Application
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:5000/api/v1
+
+
+## Disclaimer
+This project is a personal/portfolio project created for educational and demonstration purposes. It is not affiliated with or endorsed by any existing company or product that may share a similar name.
