@@ -25,7 +25,7 @@ The application provides a seamless conversational experience with persistent me
 - **Backend**: TypeScript, Node.js, Express 
 - **Authentication**: JWT (JSON Web Tokens), Bcrypt
 - **Database**: MongoDB (Cloud-hosted via MongoDB Atlas, using Mongoose)
-- **AI API**: Groq with Llama 3 model
+- **AI API**: Groq with Llama 3-8b model
 - **Build Tools**: Vite
 
 ## How to Use This Source Code
