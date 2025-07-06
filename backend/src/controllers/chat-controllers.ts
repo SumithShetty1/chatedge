@@ -18,10 +18,16 @@ export const generateChatCompletion = async (req: Request, res: Response, next: 
         if (!user) return res.status(401).json({ message: "User not registered OR Token malfunctioned" });
 
         // Prepare chat history from user's previous chats
-        const chats: GroqMessage[] = user.chats.map(({ role, content }) => ({
-            role: role as 'user' | 'assistant' | 'system',
-            content
-        }));
+        const chats: GroqMessage[] = [
+            {
+                role: "system",
+                content: "You are ChatEdge, an intelligent AI assistant. Never claim that the user previously told you this or that it was discussed earlier."
+            },
+            ...user.chats.map(({ role, content }) => ({
+                role: role as 'user' | 'assistant' | 'system',
+                content
+            })),
+        ];
 
         // Add new user message to chat history
         chats.push({ content: message, role: "user" });

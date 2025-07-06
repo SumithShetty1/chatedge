@@ -36,8 +36,8 @@ const Login = () => {
   }, [auth]);
 
   return (
-    <Box width={"100%"} height={"100%"} display="flex" flex={1}>
-      <Box padding={5} mt={5} display={{ md: "flex", sm: "none", xs: "none" }}>
+    <Box width={"100%"} height={"100%"} display="flex" flexDirection={{ xs: "column", md: "row" }}>
+      <Box padding={5} mt={5} display={{ md: "flex", sm: "none", xs: "none" }} flex={{ md: 1 }} justifyContent="center" alignItems="center">
         <img src="airobot.png" alt="Robot" style={{ width: "100%", maxWidth: "400px" }} />
       </Box>
 
@@ -47,7 +47,7 @@ const Login = () => {
         justifyContent={"center"}
         alignItems={"center"}
         padding={2}
-        ml={{ xs: 0, md: "auto" }}
+        ml={{ xs: 0, md: "auto"  }}
         mr={{ xs: 0, md: "auto" }}
         mt={{ xs: 2, sm: 16 }}
       >
