@@ -1,12 +1,12 @@
 # ChatEdge - AI Chatbot Web Application
 
 ## Project Overview
-ChatEdge is an intelligent AI chatbot that delivers lightning-fast, highly contextual, and human-like conversations. Powered by the advanced Llama 3-8b model via Groq, it adapts to user intent across technical topics, creative brainstorming, learning concepts, and general knowledge exploration.
+ChatEdge is an intelligent AI chatbot that delivers lightning-fast, highly contextual, and human-like conversations. Powered by the advanced Llama 3-8B model via Groq, it adapts to user intent across technical topics, creative brainstorming, learning concepts, and general knowledge exploration.
 
 The application provides a seamless conversational experience with persistent memory of past interactions, secure access controls, and responsive design for all devices.
 
 ## Key Features
-- **Natural Conversations**: Human-like dialogue powered by Llama 3-8b with Groq's ultra-fast inference
+- **Natural Conversations**: Human-like dialogue powered by Llama 3-8B with Groq's ultra-fast inference
 - **Context-Aware Responses**: Maintains conversation context across multiple interactions
 - **Persistent Memory**: Saves and recalls your complete chat history
 - **Secure Access**: Protected user accounts with industry-standard authentication
@@ -25,7 +25,7 @@ The application provides a seamless conversational experience with persistent me
 - **Backend**: TypeScript, Node.js, Express 
 - **Authentication**: JWT (JSON Web Tokens), Bcrypt
 - **Database**: MongoDB (Cloud-hosted via MongoDB Atlas, using Mongoose)
-- **AI API**: Groq with Llama 3-8b model
+- **AI API**: Groq with Llama 3-8B model
 - **Build Tools**: Vite
 
 ## How to Use This Source Code
