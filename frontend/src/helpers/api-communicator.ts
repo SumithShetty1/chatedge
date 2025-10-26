@@ -38,14 +38,26 @@ export const checkAuthStatus = async () => {
 
 // Sends new chat message to server
 export const sendChatRequest = async (message: string) => {
-    const res = await axios.post("/chat/new", { message });
+    try {
+        const res = await axios.post("/chat/new", { message });
+        
+        if (res.status === 429) {
+            // Handle rate limit specifically
+            throw new Error("Rate limit exceeded. Please wait a minute before sending another message.");
+        }
+        
+        if (res.status !== 200) {
+            throw new Error("Unable to send chat");
+        }
 
-    if (res.status !== 200) {
-        throw new Error("Unable to send chat");
+        const data = await res.data;
+        return data;
+    } catch (error: any) {
+        if (error.response?.status === 429) {
+            throw new Error("Rate limit exceeded. Please wait a minute before sending another message.");
+        }
+        throw new Error(error.response?.data?.message || "Unable to send chat");
     }
-
-    const data = await res.data;
-    return data;
 }
 
 // Fetches all user's chat history
