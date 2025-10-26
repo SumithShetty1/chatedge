@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Box, Avatar, Button, IconButton, Typography } from "@mui/material";
+import { Box, Avatar, Button, IconButton, Typography, CircularProgress } from "@mui/material";
 import red from '@mui/material/colors/red';
 import { useAuth } from "../context/AuthContext";
 import ChatItem from "../components/chat/ChatItem";
@@ -21,7 +21,9 @@ const Chat = () => {
   const inputRef = useRef<HTMLInputElement | null>(null)
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const auth = useAuth();
-  const [chatMessages, setChatMessages] = useState<Message[]>([])
+  const [chatMessages, setChatMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [pendingMessage, setPendingMessage] = useState<string | null>(null);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -30,19 +32,55 @@ const Chat = () => {
     }
   }, [chatMessages]);
 
-  // Handles sending new chat messages
-  const handleSubmit = async () => {
-    const content = inputRef.current?.value as string;
+  // Auto-retry for rate limiting
+  useEffect(() => {
+    if (pendingMessage) {
+      const timer = setTimeout(() => {
+        handleSubmit(pendingMessage);
+      }, 60000); // Retry after 60 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [pendingMessage, isLoading]);
 
-    if (inputRef && inputRef.current) {
+  // Handles sending new chat messages
+  const handleSubmit = async (content?: string) => {
+    const messageContent = content || inputRef.current?.value as string;
+
+    if (!messageContent.trim()) return;
+
+    // Clear input if this is a new message (not auto-retry)
+    if (!content && inputRef.current) {
       inputRef.current.value = "";
     }
 
-    const newMessage: Message = { role: "user", content };
+    const newMessage: Message = { role: "user", content: messageContent };
     setChatMessages((prev) => [...prev, newMessage]);
+    setIsLoading(true);
 
-    const chatData = await sendChatRequest(content);
-    setChatMessages([...chatData.chats]);
+    // Safety timeout - reset loading after 70 seconds max
+    const safetyTimeout = setTimeout(() => {
+      setIsLoading(false);
+    }, 70000);
+
+    try {
+      const chatData = await sendChatRequest(messageContent);
+      setChatMessages([...chatData.chats]);
+      setPendingMessage(null); // Clear pending message on success
+      setIsLoading(false);
+      clearTimeout(safetyTimeout);
+    } catch (error: any) {
+      // Remove the user message that failed to send
+      setChatMessages(prev => prev.slice(0, -1));
+
+      if (error.message.includes("Rate limit exceeded")) {
+        // Set up auto-retry after 60 seconds
+        setPendingMessage(messageContent);
+        // Just continue showing "AI is thinking..."
+      } else {
+        setIsLoading(false);
+        toast.error(error.message);
+      }
+    }
   };
 
   // Clears all chat history
@@ -51,6 +89,8 @@ const Chat = () => {
       toast.loading("Deleting Chats", { id: "deletechats" });
       await deleteUserChats();
       setChatMessages([]);
+      setPendingMessage(null);
+      setIsLoading(false);
       toast.success("Deleted Chats Successfully", { id: "deletechats" });
     }
     catch (err) {
@@ -117,10 +157,8 @@ const Chat = () => {
               fontWeight: 700,
             }}
           >
-
             {auth?.user?.name[0]}
             {auth?.user?.name.split(" ")[1] ? auth.user.name.split(" ")[1][0] : ""}
-
           </Avatar>
           <Typography sx={{ mx: "auto", fontFamily: "work sans" }}>
             You are talking to a ChatBOT
@@ -158,7 +196,7 @@ const Chat = () => {
           fontWeight: "600",
         }}
         >
-          Model - Llama 3
+          Model - Llama 3.1-8B Instant
         </Typography>
 
         <Box
@@ -176,13 +214,21 @@ const Chat = () => {
             scrollBehavior: "smooth",
           }}
         >
-
           {/* Render all chat messages */}
           {chatMessages.map((chat, index) => (
             //@ts-ignore
             <ChatItem content={chat.content} role={chat.role} key={index} />
           ))}
 
+          {/* Loading indicator */}
+          {isLoading && (
+            <Box sx={{ display: "flex", justifyContent: "flex-start", mx: 2, my: 1 }}>
+              <CircularProgress size={20} sx={{ color: "white" }} />
+              <Typography sx={{ color: "white", ml: 2 }}>
+                AI is thinking...
+              </Typography>
+            </Box>
+          )}
         </Box>
 
         <div style={{
@@ -191,14 +237,14 @@ const Chat = () => {
           backgroundColor: "rgb(17,27,39)",
           display: "flex",
           margin: "auto",
+          alignItems: "center",
         }}>
-          {" "}
           <input
             ref={inputRef}
             type="text"
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault(); // prevents accidental form submission or newline
+              if (e.key === "Enter" && !isLoading) {
+                e.preventDefault();
                 handleSubmit();
               }
             }}
@@ -211,12 +257,23 @@ const Chat = () => {
               color: "white",
               fontSize: "18px",
             }}
+            placeholder="Type your message..."
           />
 
-          <IconButton onClick={handleSubmit} sx={{ color: "white", mx: 1 }}>
-            <IoMdSend />
+          <IconButton
+            onClick={() => handleSubmit()}
+            disabled={isLoading}
+            sx={{
+              color: isLoading ? "gray" : "white",
+              mx: 1
+            }}
+          >
+            {isLoading ? <CircularProgress size={20} /> : <IoMdSend />}
           </IconButton>
-          <IconButton onClick={handleDeleteChats}
+
+          <IconButton
+            onClick={handleDeleteChats}
+            disabled={isLoading}
             sx={{
               color: red[300],
               mr: 1,

@@ -17,9 +17,9 @@ export const generateChatCompletion = async (req: Request, res: Response, next: 
         const user = await User.findById(res.locals.jwtData.id);
         if (!user) return res.status(401).json({ message: "User not registered OR Token malfunctioned" });
         
-        // Only send last 6-8 messages instead of ALL history
+        // Only send last 8 messages instead of ALL history
         const recentChats = user.chats.slice(-8);
-        
+
         // Prepare chat history from user's previous chats
         const chats: GroqMessage[] = [
             {
