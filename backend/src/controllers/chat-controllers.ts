@@ -39,7 +39,7 @@ export const generateChatCompletion = async (req: Request, res: Response, next: 
         // Call Groq API with chat history
         const chatResponse = await groq.chat.completions.create({
             messages: chats,
-            model: "llama3-8b-8192",
+            model: "llama-3.1-8b-instant",
         });
 
         // Extract assistant's response
