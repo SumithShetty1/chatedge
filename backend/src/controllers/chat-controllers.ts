@@ -16,14 +16,17 @@ export const generateChatCompletion = async (req: Request, res: Response, next: 
         // Verify authenticated user
         const user = await User.findById(res.locals.jwtData.id);
         if (!user) return res.status(401).json({ message: "User not registered OR Token malfunctioned" });
-
+        
+        // Only send last 6-8 messages instead of ALL history
+        const recentChats = user.chats.slice(-8);
+        
         // Prepare chat history from user's previous chats
         const chats: GroqMessage[] = [
             {
                 role: "system",
                 content: "You are ChatEdge, an intelligent AI assistant. Never claim that the user previously told you this or that it was discussed earlier."
             },
-            ...user.chats.map(({ role, content }) => ({
+            ...recentChats.map(({ role, content }) => ({
                 role: role as 'user' | 'assistant' | 'system',
                 content
             })),
