@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../models/User.js";
+import ChatSession from "../models/ChatSession.js";
+import Message from "../models/Message.js";
 import { configureGroq } from "../config/groq-config.js";
 
 // Type definition for chat messages
@@ -13,12 +15,34 @@ export const generateChatCompletion = async (req: Request, res: Response, next: 
     const { message } = req.body;
 
     try {
+        const userId = res.locals.jwtData.id;
+
         // Verify authenticated user
-        const user = await User.findById(res.locals.jwtData.id);
+        const user = await User.findById(userId);
         if (!user) return res.status(401).json({ message: "User not registered OR Token malfunctioned" });
-        
-        // Only send last 8 messages instead of ALL history
-        const recentChats = user.chats.slice(-8);
+
+
+        // Find or create chat session for user
+        let chatSession = await ChatSession.findOne({ userId }).sort({ updatedAt: -1 });
+
+        if (!chatSession) {
+            // Create first chat session for user
+            chatSession = await ChatSession.create({
+                userId,
+                title: message.substring(0, 50) + "..." // Auto-generate title from first message
+            });
+        } else {
+            // Update title with latest user message
+            await ChatSession.findByIdAndUpdate(chatSession._id, {
+                title: message.substring(0, 50) + "...",
+                updatedAt: new Date()
+            });
+        }
+
+        // Get recent messages from Message collection
+        const recentMessages = await Message.find({ sessionId: chatSession._id })
+            .sort({ timestamp: -1 })
+            .limit(8);
 
         // Prepare chat history from user's previous chats
         const chats: GroqMessage[] = [
@@ -26,15 +50,12 @@ export const generateChatCompletion = async (req: Request, res: Response, next: 
                 role: "system",
                 content: "You are ChatEdge, an intelligent AI assistant. Never claim that the user previously told you this or that it was discussed earlier."
             },
-            ...recentChats.map(({ role, content }) => ({
+            ...recentMessages.reverse().map(({ role, content }) => ({
                 role: role as 'user' | 'assistant' | 'system',
                 content
             })),
+            { content: message, role: "user" }
         ];
-
-        // Add new user message to chat history
-        chats.push({ content: message, role: "user" });
-        user.chats.push({ content: message, role: "user" });
 
         // Initialize Groq client
         const groq = configureGroq();
@@ -51,12 +72,29 @@ export const generateChatCompletion = async (req: Request, res: Response, next: 
             role: "assistant"
         };
 
-        // Save assistant's response to user's chat history
-        user.chats.push(assistantMessage);
-        await user.save();
+        // Save messages to Message collection
+        await Message.insertMany([
+            {
+                sessionId: chatSession._id,
+                role: "user",
+                content: message
+            },
+            {
+                sessionId: chatSession._id,
+                role: "assistant",
+                content: assistantMessage.content
+            }
+        ]);
 
-        // Return updated chat history
-        return res.status(200).json({ chats: user.chats });
+        // Update session timestamp
+        await ChatSession.findByIdAndUpdate(chatSession._id, {
+            updatedAt: new Date()
+        });
+
+        // Return only AI response
+        return res.status(200).json({
+            assistantMessage: assistantMessage
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Something went wrong" });
@@ -70,24 +108,40 @@ export const sendChatsToUser = async (
     next: NextFunction
 ) => {
     try {
-        // Verify authenticated user
-        const user = await User.findById(res.locals.jwtData.id);
+        const userId = res.locals.jwtData.id;
 
+        // Verify authenticated user
+        const user = await User.findById(userId);
         if (!user) {
             return res.status(401).send("User not registered OR Token malfunctioned");
         }
 
         // Verify user ID matches token
-        if (user._id.toString() !== res.locals.jwtData.id) {
+        if (user._id.toString() !== userId) {
             return res.status(401).send("Permissions didn't match");
         }
 
-        // Return user's chat history
-        return res.status(200).json({ message: "OK", chats: user.chats });
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(200).json({ message: "ERROR", cause: error.message });
+        // Find user's most recent chat session
+        const chatSession = await ChatSession.findOne({ userId }).sort({ updatedAt: -1 });
+
+        if (!chatSession) {
+            // No chats yet for this user
+            return res.status(200).json({ message: "OK", chats: [] });
+        }
+
+        // Get messages from Message collection
+        const messages = await Message.find({ sessionId: chatSession._id })
+            .sort({ timestamp: 1 }); // Oldest first for proper chat order
+
+        const chats = messages.map(msg => ({
+            role: msg.role,
+            content: msg.content
+        }));
+
+        return res.status(200).json({ message: "OK", chats });
+
+    } catch (error) {
+        return res.status(500).json({ message: "ERROR", cause: error.message });
     }
 };
 
@@ -98,27 +152,36 @@ export const deleteChats = async (
     next: NextFunction
 ) => {
     try {
-        // Verify authenticated user
-        const user = await User.findById(res.locals.jwtData.id);
+        const userId = res.locals.jwtData.id;
 
+        // Verify authenticated user
+        const user = await User.findById(userId);
         if (!user) {
             return res.status(401).send("User not registered OR Token malfunctioned");
         }
 
         // Verify user ID matches token
-        if (user._id.toString() !== res.locals.jwtData.id) {
+        if (user._id.toString() !== userId) {
             return res.status(401).send("Permissions didn't match");
         }
 
-        // Clear chat history
-        //@ts-ignore
-        user.chats = [];
-        await user.save();
+        // Find user's chat session
+        const chatSession = await ChatSession.findOne({ userId }).sort({ updatedAt: -1 });
+
+        if (chatSession) {
+            // Delete all messages for this session
+            await Message.deleteMany({ sessionId: chatSession._id });
+            
+            // Reset chat session title and timestamps
+            await ChatSession.findByIdAndUpdate(chatSession._id, {
+                title: "New Chat",
+                updatedAt: new Date()
+            });
+        }
 
         return res.status(200).json({ message: "OK" });
-    }
-    catch (error) {
-        console.log(error);
-        return res.status(200).json({ message: "ERROR", cause: error.message });
+
+    } catch (error) {
+        return res.status(500).json({ message: "ERROR", cause: error.message });
     }
 };

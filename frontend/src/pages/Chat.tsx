@@ -53,6 +53,7 @@ const Chat = () => {
       inputRef.current.value = "";
     }
 
+    // Add user message immediately
     const newMessage: Message = { role: "user", content: messageContent };
     setChatMessages((prev) => [...prev, newMessage]);
     setIsLoading(true);
@@ -64,7 +65,7 @@ const Chat = () => {
 
     try {
       const chatData = await sendChatRequest(messageContent);
-      setChatMessages([...chatData.chats]);
+      setChatMessages(prev => [...prev, chatData.assistantMessage]);
       setPendingMessage(null); // Clear pending message on success
       setIsLoading(false);
       clearTimeout(safetyTimeout);
