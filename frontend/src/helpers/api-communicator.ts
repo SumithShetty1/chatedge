@@ -4,11 +4,20 @@ import axios from "axios";
 export const loginUser = async (email: string, password: string) => {
     const res = await axios.post("/user/login", { email, password });
 
+    if (res.status === 429) {
+        // Handle rate limit specifically
+        throw new Error("Rate limit exceeded. Please wait a minute before trying again.");
+    }
+
     if (res.status !== 200) {
         throw new Error("Unable to login");
     }
 
     const data = await res.data;
+
+    // Store JWT token in local storage for session management
+    localStorage.setItem("ws_token", data.token);
+
     return data;
 };
 
@@ -16,11 +25,20 @@ export const loginUser = async (email: string, password: string) => {
 export const signupUser = async (name: string, email: string, password: string) => {
     const res = await axios.post("/user/signup", { name, email, password });
 
+    if (res.status === 429) {
+        // Handle rate limit specifically
+        throw new Error("Rate limit exceeded. Please wait a minute before trying again.");
+    }
+
     if (res.status !== 201) {
         throw new Error("Unable to Signup");
     }
 
     const data = await res.data;
+
+    // Store JWT token in local storage for session management
+    localStorage.setItem("ws_token", data.token);
+
     return data;
 };
 
@@ -34,30 +52,6 @@ export const checkAuthStatus = async () => {
 
     const data = await res.data;
     return data;
-}
-
-// Sends new chat message to server
-export const sendChatRequest = async (message: string) => {
-    try {
-        const res = await axios.post("/chat/new", { message });
-        
-        if (res.status === 429) {
-            // Handle rate limit specifically
-            throw new Error("Rate limit exceeded. Please wait a minute before sending another message.");
-        }
-        
-        if (res.status !== 200) {
-            throw new Error("Unable to send chat");
-        }
-
-        const data = await res.data;
-        return data;
-    } catch (error: any) {
-        if (error.response?.status === 429) {
-            throw new Error("Rate limit exceeded. Please wait a minute before sending another message.");
-        }
-        throw new Error(error.response?.data?.message || "Unable to send chat");
-    }
 }
 
 // Fetches all user's chat history

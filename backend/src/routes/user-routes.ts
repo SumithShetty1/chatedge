@@ -2,6 +2,7 @@ import { Router } from "express";
 import { getAllUsers, userLogin, userLogout, userSignup, verifyUser } from "../controllers/user-controllers.js";
 import { loginValidator, signupValidator, validate } from "../utils/validators.js";
 import { verifyToken } from "../utils/token-manager.js";
+import { rateLimiter } from "../utils/rate-limiter.js";
 
 // Create user-specific router instance
 const userRoutes = Router();
@@ -12,10 +13,10 @@ const userRoutes = Router();
 userRoutes.get("/", getAllUsers);
 
 // User registration with validation middleware
-userRoutes.post("/signup", validate(signupValidator), userSignup);
+userRoutes.post("/signup", rateLimiter, validate(signupValidator), userSignup);
 
 // User login with validation middleware
-userRoutes.post("/login", validate(loginValidator), userLogin);
+userRoutes.post("/login", rateLimiter, validate(loginValidator), userLogin);
 
 
 // ============= Protected Routes (Require Valid JWT) ============= //

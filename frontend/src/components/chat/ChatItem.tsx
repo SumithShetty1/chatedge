@@ -25,12 +25,39 @@ function isCodeBlock(str: string) {
 const ChatItem = ({
     content,
     role,
+    isLoading
 }: {
     content: string;
     role: "user" | "assistant";
+    isLoading?: boolean;
 }) => {
     const messageBlocks = extractCodeFromString(content);
     const auth = useAuth();
+
+    // Loading indicator for assistant messages
+    if (role === "assistant" && isLoading && content === "") {
+        return (
+            <Box sx={{
+                display: "flex",
+                p: 2,
+                bgcolor: "#004d5612",
+                my: 1,
+                gap: 2,
+                borderRadius: 2,
+            }}>
+                <Avatar sx={{ ml: "0", bgcolor: "white" }}>
+                    <img src="chatedge-logo.png" alt="Logo" width={"30px"} />
+                </Avatar>
+
+                <Box sx={{ display: "flex", alignItems: "center", color: "white" }}>
+                    <span className="dot-typing"></span>
+                    <span className="dot-typing" style={{ animationDelay: "0.2s" }}></span>
+                    <span className="dot-typing" style={{ animationDelay: "0.4s" }}></span>
+                </Box>
+            </Box>
+        );
+    }
+
     return role === "assistant" ? (
         // Assistant message styling (different background)
         <Box sx={{ display: "flex", p: 2, bgcolor: "#004d5612", my: 1, gap: 2, borderRadius: 2, }}>

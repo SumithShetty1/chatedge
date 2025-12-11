@@ -34,8 +34,3 @@ export const signupValidator = [
     body("name").notEmpty().withMessage("Name is required"),    // Validate name presence
     ...loginValidator,  // Include all login validations
 ];
-
-// Validation rules for chat completion endpoint
-export const chatCompletionValidator = [
-    body("message").notEmpty().withMessage("Message is required"),  // Validate message presence
-];

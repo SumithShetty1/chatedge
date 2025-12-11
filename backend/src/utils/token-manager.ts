@@ -14,15 +14,15 @@ export const createToken = (id: string, email: string, expiresIn: string) => {
 
 // Middleware to verify JWT token from cookies
 export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
-        // Extract token from signed cookies
+    // Extract token from signed cookies
     const token = req.signedCookies[`${COOKIE_NAME}`];
 
-        // Check if token exists and is not empty
+    // Check if token exists and is not empty
     if(!token || token.trim() === "") {
         return res.status(401).json({message: "Token Not Received"});
     }
 
-        // Verify token asynchronously
+    // Verify token asynchronously
     return new Promise<void>((resolve, reject) => {
         return jwt.verify(token, process.env.JWT_SECRET, (err, success)=>{
             if(err) {
@@ -35,4 +35,28 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
             }
         });
     });
+};
+
+// Middleware to verify JWT token for socket connections
+export const verifySocketToken = (socket, next) => {
+    try {
+        // Extract token from socket handshake authentication
+        const token = socket.handshake.auth.token;
+
+        // Check if token is provided
+        if (!token) {
+            return next(new Error("Token missing"));
+        }
+
+        // Verify token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Attach decoded token data to socket object
+        socket.user = decoded;
+
+        // Proceed to next middleware
+        next();
+    } catch (err) {
+        next(new Error("Invalid or expired token"));
+    }
 };

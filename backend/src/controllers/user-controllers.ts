@@ -71,7 +71,7 @@ export const userSignup = async (
         });
 
         // Return success response with user details (excluding password)
-        return res.status(201).json({ message: "OK", name: user.name, email: user.email });
+        return res.status(201).json({ message: "OK", name: user.name, email: user.email, token: token });
     }
     catch (error) {
         console.log(error);
@@ -131,7 +131,7 @@ export const userLogin = async (
         });
 
         // Return success response with user details (excluding password)
-        return res.status(200).json({ message: "OK", name: user.name, email: user.email });
+        return res.status(200).json({ message: "OK", name: user.name, email: user.email, token: token });
     }
     catch (error) {
         console.log(error);

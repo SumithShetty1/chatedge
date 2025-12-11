@@ -4,10 +4,15 @@ import red from '@mui/material/colors/red';
 import { useAuth } from "../context/AuthContext";
 import ChatItem from "../components/chat/ChatItem";
 import { IoMdSend } from 'react-icons/io';
-import { deleteUserChats, getUserChat, sendChatRequest } from "../helpers/api-communicator";
+import { deleteUserChats, getUserChat } from "../helpers/api-communicator";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
+import { getSocket } from "../helpers/socket";
+import { useChatStream } from "../hooks/useChatStream";
+
+// Initialize WebSocket connection
+const socket = getSocket();
 
 // Type definition for chat messages
 type Message = {
@@ -23,7 +28,6 @@ const Chat = () => {
   const auth = useAuth();
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [pendingMessage, setPendingMessage] = useState<string | null>(null);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -32,56 +36,63 @@ const Chat = () => {
     }
   }, [chatMessages]);
 
-  // Auto-retry for rate limiting
-  useEffect(() => {
-    if (pendingMessage) {
-      const timer = setTimeout(() => {
-        handleSubmit(pendingMessage);
-      }, 60000); // Retry after 60 seconds
-      return () => clearTimeout(timer);
-    }
-  }, [pendingMessage, isLoading]);
+  // Handle incoming chat stream tokens
+  const handleToken = (token: string) => {
+    setChatMessages(prev => {
+      const updated = [...prev];
+      const last = updated[updated.length - 1];
 
-  // Handles sending new chat messages
-  const handleSubmit = async (content?: string) => {
+      if (last?.role === "assistant") {
+        // Prevent duplicate token concatenations
+        const newContent = last.content + token;
+
+        // If content already contains this new form, ignore it
+        if (newContent.endsWith(last.content + token) && last.content.endsWith(token)) {
+          return updated; // ignore duplicate
+        }
+
+        last.content = newContent;
+      }
+
+      return [...updated];
+    });
+  };
+
+  // Set up chat stream event handlers
+  useChatStream(
+    handleToken,
+    () => setIsLoading(false),
+    (data) => toast.error(data.message),
+    (data) => toast.error(data.message)
+  );
+
+  // Handles message submission
+  const handleSubmit = (content?: string) => {
     const messageContent = content || inputRef.current?.value as string;
-
     if (!messageContent.trim()) return;
 
-    // Clear input if this is a new message (not auto-retry)
-    if (!content && inputRef.current) {
-      inputRef.current.value = "";
-    }
+    // Clear input
+    if (inputRef.current) inputRef.current.value = "";
 
-    // Add user message immediately
-    const newMessage: Message = { role: "user", content: messageContent };
-    setChatMessages((prev) => [...prev, newMessage]);
     setIsLoading(true);
 
-    // Safety timeout - reset loading after 70 seconds max
-    const safetyTimeout = setTimeout(() => {
-      setIsLoading(false);
-    }, 70000);
+    // Add user message and assistant placeholder to chat
+    setChatMessages(prev => {
+      const updated = [...prev];
 
-    try {
-      const chatData = await sendChatRequest(messageContent);
-      setChatMessages(prev => [...prev, chatData.assistantMessage]);
-      setPendingMessage(null); // Clear pending message on success
-      setIsLoading(false);
-      clearTimeout(safetyTimeout);
-    } catch (error: any) {
-      // Remove the user message that failed to send
-      setChatMessages(prev => prev.slice(0, -1));
+      // Avoid duplicate assistant placeholders
+      const last = updated[updated.length - 1];
+      if (last?.role === "assistant" && last.content === "") return updated;
 
-      if (error.message.includes("Rate limit exceeded")) {
-        // Set up auto-retry after 60 seconds
-        setPendingMessage(messageContent);
-        // Just continue showing "AI is thinking..."
-      } else {
-        setIsLoading(false);
-        toast.error(error.message);
-      }
-    }
+      return [
+        ...updated,
+        { role: "user", content: messageContent },
+        { role: "assistant", content: "" }
+      ];
+    });
+
+    // Send to WebSocket
+    socket.emit("chat:new", { message: messageContent });
   };
 
   // Clears all chat history
@@ -90,7 +101,6 @@ const Chat = () => {
       toast.loading("Deleting Chats", { id: "deletechats" });
       await deleteUserChats();
       setChatMessages([]);
-      setPendingMessage(null);
       setIsLoading(false);
       toast.success("Deleted Chats Successfully", { id: "deletechats" });
     }
@@ -218,18 +228,8 @@ const Chat = () => {
           {/* Render all chat messages */}
           {chatMessages.map((chat, index) => (
             //@ts-ignore
-            <ChatItem content={chat.content} role={chat.role} key={index} />
+            <ChatItem content={chat.content} role={chat.role} key={index} isLoading={isLoading && chat.role === "assistant" && chat.content === ""} />
           ))}
-
-          {/* Loading indicator */}
-          {isLoading && (
-            <Box sx={{ display: "flex", justifyContent: "flex-start", mx: 2, my: 1 }}>
-              <CircularProgress size={20} sx={{ color: "white" }} />
-              <Typography sx={{ color: "white", ml: 2 }}>
-                AI is thinking...
-              </Typography>
-            </Box>
-          )}
         </Box>
 
         <div style={{
