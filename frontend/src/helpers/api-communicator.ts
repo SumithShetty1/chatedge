@@ -15,9 +15,6 @@ export const loginUser = async (email: string, password: string) => {
 
     const data = await res.data;
 
-    // Store JWT token in local storage for session management
-    localStorage.setItem("ws_token", data.token);
-
     return data;
 };
 
@@ -35,9 +32,6 @@ export const signupUser = async (name: string, email: string, password: string) 
     }
 
     const data = await res.data;
-
-    // Store JWT token in local storage for session management
-    localStorage.setItem("ws_token", data.token);
 
     return data;
 };
