@@ -10,9 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { MdDelete } from "react-icons/md";
 import { getSocket } from "../helpers/socket";
 import { useChatStream } from "../hooks/useChatStream";
-
-// Initialize WebSocket connection
-const socket = getSocket();
+import type { Socket } from "socket.io-client";
 
 // Type definition for chat messages
 type Message = {
@@ -28,6 +26,15 @@ const Chat = () => {
   const auth = useAuth();
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [socket, setSocket] = useState<Socket | null>(null);
+
+  // Initialize WebSocket connection when user is authenticated
+  useEffect(() => {
+    if (auth?.isLoggedIn) {
+      const s = getSocket();
+      setSocket(s);
+    }
+  }, [auth?.isLoggedIn]);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -94,6 +101,12 @@ const Chat = () => {
   const handleSubmit = (content?: string) => {
     const messageContent = content || inputRef.current?.value as string;
     if (!messageContent.trim()) return;
+
+    // Ensure socket is connected
+    if (!socket) {
+      toast.error("Connecting... Please wait.");
+      return;
+    }
 
     // Clear input
     if (inputRef.current) inputRef.current.value = "";
@@ -162,7 +175,7 @@ const Chat = () => {
         flex: 1,
         width: "100%",
         height: "calc(100vh - 110px)",
-        mt: {md:3, xs:3.5, sm:3},
+        mt: { md: 3, xs: 3.5, sm: 3 },
         gap: 3,
       }}
     >
@@ -237,7 +250,7 @@ const Chat = () => {
           ref={chatContainerRef}
           sx={{
             width: "100%",
-            height: {md: "70vh", sm: "70vh", xs: "67vh"},
+            height: { md: "70vh", sm: "70vh", xs: "67vh" },
             borderRadius: 3,
             mx: 'auto',
             display: 'flex',
