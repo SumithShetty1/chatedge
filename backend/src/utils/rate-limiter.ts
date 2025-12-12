@@ -39,10 +39,9 @@ export function wsRateLimiter(socket) {
 
     // Check if user has exceeded rate limit
     if (userData.count >= 6) {
-        socket.emit("chat:error", {
+        socket.emit("rate-limit", {
             message: "Too many chat requests. Please wait a minute before sending another message."
         });
-
         return false; // BLOCK request
     }
 
