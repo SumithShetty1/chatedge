@@ -25,7 +25,6 @@ function isCodeBlock(str: string) {
 const ChatItem = ({
     content,
     role,
-    isLoading
 }: {
     content: string;
     role: "user" | "assistant";
@@ -34,33 +33,9 @@ const ChatItem = ({
     const messageBlocks = extractCodeFromString(content);
     const auth = useAuth();
 
-    // Loading indicator for assistant messages
-    if (role === "assistant" && isLoading && content === "") {
-        return (
-            <Box sx={{
-                display: "flex",
-                p: 2,
-                bgcolor: "#004d5612",
-                my: 1,
-                gap: 2,
-                borderRadius: 2,
-            }}>
-                <Avatar sx={{ ml: "0", bgcolor: "white" }}>
-                    <img src="chatedge-logo.png" alt="Logo" width={"30px"} />
-                </Avatar>
-
-                <Box sx={{ display: "flex", alignItems: "center", color: "white" }}>
-                    <span className="dot-typing"></span>
-                    <span className="dot-typing" style={{ animationDelay: "0.2s" }}></span>
-                    <span className="dot-typing" style={{ animationDelay: "0.4s" }}></span>
-                </Box>
-            </Box>
-        );
-    }
-
     return role === "assistant" ? (
         // Assistant message styling (different background)
-        <Box sx={{ display: "flex", p: 2, bgcolor: "#004d5612", my: 1, gap: 2, borderRadius: 2, }}>
+        <Box sx={{ display: "flex", p: 1, bgcolor: "#004d5612", my: 1, gap: 2, borderRadius: 2, }}>
             {/* Assistant avatar with logo */}
             <Avatar sx={{ ml: "0", bgcolor: "white" }}>
                 <img src="chatedge-logo.png" alt="Logo" width={"30px"} />
@@ -70,7 +45,12 @@ const ChatItem = ({
             <Box>
                 {/* Render simple message if no code blocks */}
                 {!messageBlocks && (
-                    <Box sx={{ fontSize: "18px", color: "white" }}>
+                    <Box sx={{
+                        fontSize: "18px", color: "white", "& p": {
+                            mt: 1,
+                            mb: 1,
+                        }
+                    }}>
                         <ReactMarkdown>{content}</ReactMarkdown>
                     </Box>
                 )}
@@ -81,7 +61,12 @@ const ChatItem = ({
                         {block}
                     </SyntaxHighlighter>
                 ) : (
-                    <Box sx={{ fontSize: "18px", color: "white" }}>
+                    <Box sx={{
+                        fontSize: "18px", color: "white", "& p": {
+                            mt: 1,
+                            mb: 1,
+                        }
+                    }}>
                         <ReactMarkdown>{block}</ReactMarkdown>
                     </Box>
                 )
@@ -90,7 +75,7 @@ const ChatItem = ({
         </Box>
     ) : (
         // User message styling
-        <Box sx={{ display: "flex", p: 2, bgcolor: "#004d56", gap: 2, my: 2, borderRadius: 2, }}>
+        <Box sx={{ display: "flex", p: 1, bgcolor: "#004d56", gap: 2, my: 2, borderRadius: 2, }}>
             {/* User avatar with initials */}
             <Avatar sx={{ ml: "0", bgcolor: "black", color: "white" }}>
                 {auth?.user?.name[0]}
@@ -101,7 +86,12 @@ const ChatItem = ({
             <Box>
                 {/* Render simple message if no code blocks */}
                 {!messageBlocks && (
-                    <Box sx={{ fontSize: "18px", color: "white" }}>
+                    <Box sx={{
+                        fontSize: "18px", color: "white", "& p": {
+                            mt: 1,
+                            mb: 1,
+                        }
+                    }}>
                         <ReactMarkdown>{content}</ReactMarkdown>
                     </Box>
                 )}
@@ -112,7 +102,12 @@ const ChatItem = ({
                         {block}
                     </SyntaxHighlighter>
                 ) : (
-                    <Box sx={{ fontSize: "18px", color: "white" }}>
+                    <Box sx={{
+                        fontSize: "18px", color: "white", "& p": {
+                            mt: 1,
+                            mb: 1,
+                        }
+                    }}>
                         <ReactMarkdown>{block}</ReactMarkdown>
                     </Box>
                 )

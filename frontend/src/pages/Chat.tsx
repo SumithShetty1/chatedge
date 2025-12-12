@@ -58,12 +58,36 @@ const Chat = () => {
     });
   };
 
+  // Handle errors during chat streaming
+  const handleError = (data: { message: string }) => {
+    setChatMessages(prev => {
+      const updated = [...prev];
+
+      // Remove last two messages: assistant placeholder and user message
+      updated.pop();
+      const userMessage = updated.pop();
+
+      // Restore user message in input box for resubmission
+      if (inputRef.current && userMessage?.role === "user") {
+        inputRef.current.value = userMessage.content;
+      }
+
+      return updated;
+    });
+
+    setIsLoading(false);
+    toast.error(data.message);
+  };
+
+  // Specific handler for rate limit errors
+  const handleRateLimit = handleError;
+
   // Set up chat stream event handlers
   useChatStream(
     handleToken,
     () => setIsLoading(false),
-    (data) => toast.error(data.message),
-    (data) => toast.error(data.message)
+    handleError,
+    handleRateLimit
   );
 
   // Handles message submission
@@ -137,8 +161,8 @@ const Chat = () => {
         display: "flex",
         flex: 1,
         width: "100%",
-        height: "100%",
-        mt: 3,
+        height: "calc(100vh - 110px)",
+        mt: {md:3, xs:3.5, sm:3},
         gap: 3,
       }}
     >
@@ -202,7 +226,6 @@ const Chat = () => {
           textAlign: "center",
           fontSize: "30px",
           color: "white",
-          mb: 2,
           mx: "auto",
           fontWeight: "600",
         }}
@@ -214,7 +237,7 @@ const Chat = () => {
           ref={chatContainerRef}
           sx={{
             width: "100%",
-            height: "60vh",
+            height: {md: "70vh", sm: "70vh", xs: "67vh"},
             borderRadius: 3,
             mx: 'auto',
             display: 'flex',
@@ -228,7 +251,7 @@ const Chat = () => {
           {/* Render all chat messages */}
           {chatMessages.map((chat, index) => (
             //@ts-ignore
-            <ChatItem content={chat.content} role={chat.role} key={index} isLoading={isLoading && chat.role === "assistant" && chat.content === ""} />
+            <ChatItem content={chat.content} role={chat.role} key={index} />
           ))}
         </Box>
 
@@ -252,7 +275,7 @@ const Chat = () => {
             style={{
               width: "100%",
               backgroundColor: "transparent",
-              padding: '30px',
+              padding: '20px',
               border: "none",
               outline: "none",
               color: "white",
