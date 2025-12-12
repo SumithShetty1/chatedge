@@ -3,15 +3,17 @@
 ## Project Overview
 ChatEdge is an intelligent AI chatbot that delivers lightning-fast, highly contextual, and human-like conversations. Powered by the advanced Llama 3.1-8B Instant model via Groq, it adapts to user intent across technical topics, creative brainstorming, learning concepts, and general knowledge exploration.
 
-The application provides a seamless conversational experience with persistent memory of past interactions, secure access controls, and responsive design for all devices.
+The application provides a seamless real-time chat experience with persistent memory of past interactions, secure access controls, and responsive design for all devices.
 
 ## Key Features
 - **Natural Conversations**: Human-like dialogue powered by Llama 3.1-8B Instant with Groq's ultra-fast inference
+- **Real-Time Streaming Responses**: Token-by-token AI responses via WebSockets for smooth, instant chat flow  
 - **Context-Aware Responses**: Maintains conversation context across multiple interactions
 - **Persistent Memory**: Saves and recalls your complete chat history
 - **Secure Access**: Protected user accounts with industry-standard authentication
 - **Rich Content Support**: Displays formatted responses with markdown and syntax-highlighted code
 - **Cross-Platform**: Fully responsive interface optimized for desktop and mobile use
+- **Built-in Rate Limiting**: Prevents spam and excessive requests for both API and WebSocket chat events
 
 ## Primary Use Cases
 - Technical Q&A and debugging assistance
@@ -23,10 +25,12 @@ The application provides a seamless conversational experience with persistent me
 ## Technologies Used:
 - **Frontend**: HTML, CSS, TypeScript, React, Material UI (MUI)
 - **Backend**: TypeScript, Node.js, Express 
+- **Real-Time Communication**: Socket.IO (WebSockets)
 - **Authentication**: JWT (JSON Web Tokens), Bcrypt
 - **Database**: MongoDB (Cloud-hosted via MongoDB Atlas, using Mongoose)
 - **AI API**: Groq with Llama 3.1-8B Instant model
 - **Build Tools**: Vite
+
 
 ## How to Use This Source Code
 
