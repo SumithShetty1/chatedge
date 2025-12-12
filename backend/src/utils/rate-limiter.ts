@@ -17,6 +17,18 @@ export const rateLimiter = rateLimit({
 // In-memory map to track user message counts and timestamps
 const userRateMap = new Map();
 
+// Periodic cleanup of old entries in the userRateMap
+setInterval(() => {
+  const now = Date.now();
+
+  // Remove entries older than 5 minutes
+  for (const [userId, data] of userRateMap.entries()) {
+    if (now - data.timestamp > 5 * 60 * 1000) {
+      userRateMap.delete(userId);
+    }
+  }
+}, 5 * 60 * 1000);
+
 // WebSocket rate limiter function
 export function wsRateLimiter(socket) {
     // Get user ID from socket
